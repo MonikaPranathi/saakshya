@@ -1,58 +1,52 @@
 /* =====================================================
-   Saakshya Design System — CSS Tokens
+   Saakshya Design System — "Sunset" tokens
    ===================================================== */
-
-@import url('https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  /* ── Fonts ── */
-  --font-heading: 'Lora', Georgia, serif;
-  --font-body:    'Inter', system-ui, sans-serif;
+  --font-heading: 'Bricolage Grotesque', 'Manrope', system-ui, sans-serif;
+  --font-body:    'Manrope', system-ui, sans-serif;
   --font-mono:    'JetBrains Mono', 'Courier New', monospace;
 
-  /* ── Colors ── */
-  --color-primary:      #0E7C7B;
-  --color-primary-dark: #0B3D3F;
-  --color-accent:       #F4A63A;
-  --color-bg:           #F3F8F6;
-  --color-card:         #FFFFFF;
-  --color-border:       #D6E6E2;
-  --color-text:         #10302F;
-  --color-muted:        #5B6B7B;
-  --color-success:      #16A34A;
-  --color-success-bg:   #E8F7EE;
+  /* Brand */
+  --color-primary:      #6D28D9;
+  --color-primary-dark: #1E1B2E;   /* ink: headings + dark surfaces */
+  --color-accent:       #C2410C;
+  --color-pink:         #BE185D;
+  --color-bg:           #FFF6EE;
+  --color-card:         rgba(255, 255, 255, 0.72);
+  --color-border:       rgba(109, 40, 217, 0.14);
+  --color-text:         #1E1B2E;
+  --color-muted:        #5B5470;
+  --color-success:      #15803D;
+  --color-success-bg:   #DCFCE7;
   --color-danger:       #DC2626;
-  --color-danger-bg:    #FDECEC;
+  --color-danger-bg:    #FEE2E2;
 
-  /* ── Radius ── */
-  --radius-card:   16px;
-  --radius-btn:    12px;
-  --radius-sm:     8px;
-  --radius-pill:   999px;
+  --grad-brand:  linear-gradient(100deg, #6D28D9 0%, #BE185D 100%);
+  --grad-warm:   linear-gradient(100deg, #C2410C 0%, #BE185D 100%);
+  --grad-text:   linear-gradient(90deg, #EA580C, #DB2777, #7C3AED);
+  --grad-hero:   linear-gradient(140deg, #5B21B6 0%, #BE185D 62%, #C2410C 100%);
 
-  /* ── Shadows ── */
-  --shadow-card: 0 6px 24px rgba(11, 61, 63, 0.08);
-  --shadow-sm:   0 2px 8px  rgba(11, 61, 63, 0.06);
+  --radius-card: 24px;
+  --radius-btn:  14px;
+  --radius-sm:   10px;
+  --radius-pill: 999px;
 
-  /* ── Spacing ── */
-  --sp-1:  4px;
-  --sp-2:  8px;
-  --sp-3:  12px;
-  --sp-4:  16px;
-  --sp-6:  24px;
-  --sp-8:  32px;
-  --sp-12: 48px;
+  --shadow-card: 0 18px 50px rgba(91, 33, 182, 0.12);
+  --shadow-sm:   0 4px 14px rgba(91, 33, 182, 0.08);
 
-  /* ── Transitions ── */
-  --transition: 160ms ease;
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px;
+  --sp-6: 24px; --sp-8: 32px; --sp-12: 48px;
 
-  /* ── Layout ── */
+  --transition: 180ms ease;
   --max-content: 1080px;
 }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { signInWithPopup } from 'firebase/auth'
 import { auth, provider } from '../firebase'
-import { Camera, Lock, CheckCircle } from 'lucide-react'
+import { Camera, Lock, CheckCircle, Shield } from 'lucide-react'
 
 // ── Google "G" logo ──
 function GoogleLogo() {
@@ -17,26 +17,9 @@ function GoogleLogo() {
   )
 }
 
-// ── Fingerprint SVG illustration ──
-function FingerprintIllustration() {
-  return (
-    <svg width="260" height="260" viewBox="0 0 260 260" fill="none" aria-hidden="true"
-      style={{ opacity: 0.13, position: 'absolute', right: -20, bottom: -20, pointerEvents: 'none' }}>
-      <circle cx="130" cy="130" r="100" stroke="white" strokeWidth="2"/>
-      <circle cx="130" cy="130" r="80"  stroke="white" strokeWidth="2"/>
-      <circle cx="130" cy="130" r="60"  stroke="white" strokeWidth="2"/>
-      <circle cx="130" cy="130" r="40"  stroke="white" strokeWidth="2"/>
-      <circle cx="130" cy="130" r="20"  stroke="white" strokeWidth="2"/>
-      <path d="M130 30 C 130 30 160 60 160 130 C 160 200 130 230 130 230" stroke="white" strokeWidth="2"/>
-      <path d="M130 50 C 130 50 150 75 150 130 C 150 185 130 210 130 210" stroke="white" strokeWidth="2"/>
-      <path d="M130 70 C 130 70 142 90 142 130 C 142 170 130 190 130 190" stroke="white" strokeWidth="2"/>
-    </svg>
-  )
-}
-
-const STEPS = [
-  { icon: Camera, label: 'Capture', desc: 'Choose a file — image, PDF, audio or video.' },
-  { icon: Lock,   label: 'Seal',    desc: 'We fingerprint it with SHA-256. The file stays on your device.' },
+const CHIPS = [
+  { icon: Camera, label: 'Capture', desc: 'Choose a file: image, PDF, audio or video.' },
+  { icon: Lock, label: 'Seal', desc: 'We fingerprint it with SHA-256. The file stays on your device.' },
   { icon: CheckCircle, label: 'Verify', desc: 'Anyone with the link can verify the file is untouched.' },
 ]
 
@@ -62,54 +45,40 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="login-layout">
-      {/* ── Left panel ── */}
-      <div className="login-left" style={{ position: 'relative', overflow: 'hidden' }}>
-        <FingerprintIllustration />
+    <div className="login-page">
+      <header className="login-nav">
+        <div className="login-logo">
+          <Shield size={24} strokeWidth={2.2} aria-hidden="true" />
+          <span>Saak<span>shya</span></span>
+        </div>
+      </header>
 
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#F4A63A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            </svg>
-            <span style={{ fontFamily: 'Lora, serif', fontSize: '1.4rem', fontWeight: 700, color: '#fff' }}>
-              Saak<span style={{ color: '#F4A63A' }}>shya</span>
-            </span>
-          </div>
-
-          <p className="login-tagline">
+      <main className="login-hero">
+        <section className="login-copy">
+          <span className="login-pill">Tamper-evident evidence locker</span>
+          <h1 className="login-title">
             Prove your evidence is <span>untouched.</span>
+          </h1>
+          <p className="login-lede">
+            Seal a file's fingerprint in seconds. Anyone can verify it later, no login needed.
           </p>
-
-          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem', marginTop: 12, marginBottom: 32 }}>
-            A tamper-evident locker for cybercrime victims.
-          </p>
-        </div>
-
-        <div className="step-explainer">
-          {STEPS.map(({ icon: Icon, label, desc }) => (
-            <div key={label} className="step-item">
-              <div className="step-item-icon">
+          <div className="login-chips">
+            {CHIPS.map(({ icon: Icon, label, desc }) => (
+              <div key={label} className="login-chip" title={desc}>
                 <Icon size={18} strokeWidth={2} aria-hidden="true" />
+                {label}
               </div>
-              <div className="step-item-text">
-                <strong>{label}</strong>
-                <span>{desc}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── Right panel ── */}
-      <div className="login-right">
-        <div className="login-card">
-          <div>
-            <div className="eyebrow">Welcome</div>
-            <div className="login-card-title">Sign in to Saakshya</div>
+            ))}
           </div>
+        </section>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <aside className="login-side">
+          <div className="login-card">
+            <div>
+              <div className="login-card-title">Welcome back</div>
+              <p className="login-card-sub">Sign in to seal and manage your evidence.</p>
+            </div>
+
             <button
               className="btn-google btn-full"
               onClick={handleGoogleSignIn}
@@ -118,8 +87,8 @@ export default function LoginPage() {
             >
               <GoogleLogo />
               {loading
-                ? <><span className="spinner spinner-teal" style={{ border: '2.5px solid rgba(14,124,123,0.2)', borderTopColor: 'var(--color-primary)' }} /> Signing in…</>
-                : 'Sign in with Google'}
+                ? <><span className="spinner spinner-teal" style={{ border: '2.5px solid rgba(109,40,217,0.2)', borderTopColor: 'var(--color-primary)' }} /> Signing in…</>
+                : 'Continue with Google'}
             </button>
 
             {error && (
@@ -128,13 +97,19 @@ export default function LoginPage() {
                 <span>{error}</span>
               </div>
             )}
+
+            <p className="login-note">Verification never needs a login. Share the link freely.</p>
           </div>
 
-          <p className="login-note">
-            Verification never needs a login — share the link freely.
-          </p>
-        </div>
-      </div>
+          <div className="login-sealed" aria-hidden="true">
+            <div className="login-sealed-icon"><Shield size={20} strokeWidth={2.2} /></div>
+            <div>
+              <div className="login-sealed-name">complaint_screenshot.png</div>
+              <div className="login-sealed-meta">Example · Sealed 3f8a1c7d…4b60</div>
+            </div>
+          </div>
+        </aside>
+      </main>
     </div>
   )
 }

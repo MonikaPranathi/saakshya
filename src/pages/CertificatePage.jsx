@@ -296,7 +296,7 @@ export default function CertificatePage() {
               <QRCodeSVG
                 value={verifyUrl}
                 size={168}
-                fgColor="#0B3D3F"
+                fgColor="#1E1B2E"
                 bgColor="#ffffff"
                 level="M"
               />

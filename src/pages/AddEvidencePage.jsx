@@ -555,8 +555,9 @@ export default function AddEvidencePage() {
         {/* ── MODE 1: SELECT 4 CAPTURE OPTIONS ── */}
         {mode === 'select' && (
           <div>
-            <div style={{ fontSize: '0.86rem', fontWeight: 600, color: 'var(--color-primary-dark)', marginBottom: 4 }}>
-              Choose capture method:
+            <div className="source-head">
+              <h2>How do you want to capture?</h2>
+              <p>Pick a source. Your file never leaves your device. Only its fingerprint is saved.</p>
             </div>
 
             <div className="capture-grid">
@@ -864,7 +865,7 @@ export default function AddEvidencePage() {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div className="file-card-actions" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 {captureMethod === 'upload' ? (
                   <span className="badge-source-upload" style={{ fontSize: '0.72rem' }}>Uploaded file</span>
                 ) : (
