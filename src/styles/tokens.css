@@ -1,0 +1,58 @@
+/* =====================================================
+   Saakshya Design System — CSS Tokens
+   ===================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ── Fonts ── */
+  --font-heading: 'Lora', Georgia, serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Courier New', monospace;
+
+  /* ── Colors ── */
+  --color-primary:      #0E7C7B;
+  --color-primary-dark: #0B3D3F;
+  --color-accent:       #F4A63A;
+  --color-bg:           #F3F8F6;
+  --color-card:         #FFFFFF;
+  --color-border:       #D6E6E2;
+  --color-text:         #10302F;
+  --color-muted:        #5B6B7B;
+  --color-success:      #16A34A;
+  --color-success-bg:   #E8F7EE;
+  --color-danger:       #DC2626;
+  --color-danger-bg:    #FDECEC;
+
+  /* ── Radius ── */
+  --radius-card:   16px;
+  --radius-btn:    12px;
+  --radius-sm:     8px;
+  --radius-pill:   999px;
+
+  /* ── Shadows ── */
+  --shadow-card: 0 6px 24px rgba(11, 61, 63, 0.08);
+  --shadow-sm:   0 2px 8px  rgba(11, 61, 63, 0.06);
+
+  /* ── Spacing ── */
+  --sp-1:  4px;
+  --sp-2:  8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-6:  24px;
+  --sp-8:  32px;
+  --sp-12: 48px;
+
+  /* ── Transitions ── */
+  --transition: 160ms ease;
+
+  /* ── Layout ── */
+  --max-content: 1080px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
