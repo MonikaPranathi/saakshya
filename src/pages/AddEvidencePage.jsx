@@ -9,6 +9,7 @@ import DemoCapture from '../components/DemoCapture'
 import FileChecks from '../components/FileChecks'
 import BundleBuilder from '../components/BundleBuilder'
 import { analyzeFile } from '../metadata'
+import { sealFingerprint } from '../chain'
 import {
   Camera,
   Monitor,
@@ -450,13 +451,14 @@ export default function AddEvidencePage() {
     setError('')
     setSaving(true)
     try {
+      const seal = await sealFingerprint(hash)
       const docRef = await addDoc(collection(db, 'evidence'), {
         fileName: file.name,
         sha256: hash,
         ownerUid: user.uid,
         sealedAt: serverTimestamp(),
-        txHash: '0x' + randomHex64(),
-        network: 'Simulated testnet',
+        txHash: seal.txHash,
+        network: seal.network,
         captureMethod: captureMethod || 'upload',
         ...(isDemoCapture ? { demoCapture: true } : {}),
         ...(fileMeta
@@ -468,7 +470,7 @@ export default function AddEvidencePage() {
             }
           : {}),
       })
-      navigate(`/certificate/${docRef.id}`, { state: { evidenceFile: file } })
+      navigate(`/certificate/${docRef.id}`, { state: { evidenceFile: file, sealNote: seal.note } })
     } catch (err) {
       setError(err.message || 'Failed to save evidence. Check your Firebase configuration.')
     } finally {
@@ -957,7 +959,7 @@ export default function AddEvidencePage() {
                 {saving ? (
                   <>
                     <span className="spinner" />
-                    <span>Sealing evidence on testnet…</span>
+                    <span>Sealing on blockchain… confirm in wallet if asked</span>
                   </>
                 ) : (
                   <>

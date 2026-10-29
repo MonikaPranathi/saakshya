@@ -8,6 +8,7 @@ import CustodyTimeline from '../components/CustodyTimeline'
 import FileChecks from '../components/FileChecks'
 import { BundleResult, SealedBundleList } from '../components/BundleList'
 import { hashFiles, compareBundle, masterFingerprint } from '../bundle'
+import { isOnChainRecord, verifyOnChain, explorerTxUrl, netOf } from '../chain'
 import {
   Shield,
   UploadCloud,
@@ -47,6 +48,7 @@ export default function VerifyPage() {
   const [geoStatus, setGeoStatus] = useState('idle') // idle | getting | ok | denied | unsupported
   const [loggedCustody, setLoggedCustody] = useState(false)
   const hasLoggedRef = useRef(false)
+  const [chainCheck, setChainCheck] = useState(null) // null | {status, block?}
 
   useEffect(() => {
     document.title = 'Saakshya — Verify Evidence'
@@ -66,6 +68,14 @@ export default function VerifyPage() {
     }
     load()
   }, [id])
+
+  // Independent on-chain check: read the transaction from a public RPC and compare to the sealed fingerprint.
+  useEffect(() => {
+    if (!record || !isOnChainRecord(record)) return
+    let cancelled = false
+    verifyOnChain(record.txHash, record.sha256, record.network).then((r) => { if (!cancelled) setChainCheck(r) })
+    return () => { cancelled = true }
+  }, [record])
 
   // The verifier must identify themselves (name OR location) before they can upload a file.
   const identified = verifierName.trim().length >= 3 || !!location
@@ -316,6 +326,21 @@ export default function VerifyPage() {
             </div>
           )}
         </div>
+
+        {isOnChainRecord(record) && (
+          <div className={`chain-check chain-${chainCheck?.status || 'loading'}`}>
+            {!chainCheck && <span>Checking the blockchain…</span>}
+            {chainCheck?.status === 'match' && (
+              <span>
+                <strong>Found on {netOf(record.network).label}</strong> (block {chainCheck.block}). The sealed fingerprint is recorded on-chain.{' '}
+                <a href={explorerTxUrl(record.txHash, record.network)} target="_blank" rel="noreferrer">View transaction ↗</a>
+              </span>
+            )}
+            {chainCheck?.status === 'pending' && <span>Transaction not confirmed on-chain yet. Try again in a minute.</span>}
+            {chainCheck?.status === 'mismatch' && <span><strong>Warning:</strong> the on-chain record does not match this fingerprint.</span>}
+            {chainCheck?.status === 'error' && <span>Could not reach the blockchain right now.</span>}
+          </div>
+        )}
 
         {!verdict && record.bundle?.length > 0 && <SealedBundleList items={record.bundle} />}
 

@@ -18,11 +18,13 @@ import {
 import CustodyTimeline from '../components/CustodyTimeline'
 import FileChecks from '../components/FileChecks'
 import { SealedBundleList } from '../components/BundleList'
+import { isOnChainRecord, explorerTxUrl, netOf } from '../chain'
 
 export default function CertificatePage() {
   const { id } = useParams()
   const location = useLocation()
   const evidenceFile = location.state?.evidenceFile || null
+  const sealNote = location.state?.sealNote || ''
   const [record, setRecord] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -164,6 +166,12 @@ export default function CertificatePage() {
     <main className="page-wrapper">
       <ToastContainer toasts={toasts} />
 
+      {sealNote && (
+        <div className="no-print chain-check" style={{ background: 'var(--color-danger-bg)', color: '#7f1d1d' }}>
+          {sealNote}
+        </div>
+      )}
+
       {/* Navigation breadcrumb */}
       <div className="no-print" style={{ marginBottom: 'var(--sp-4)' }}>
         <Link to="/locker" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: '0.85rem', color: 'var(--color-muted)', fontWeight: 500 }}>
@@ -201,7 +209,9 @@ export default function CertificatePage() {
                 Evidence Certificate
               </h1>
               <p style={{ color: 'var(--color-muted)', fontSize: '0.88rem', marginTop: 4 }}>
-                Tamper-evident record sealed on simulated ledger
+                {isOnChainRecord(record)
+                  ? `Tamper-evident record anchored on ${netOf(record.network).label}`
+                  : 'Tamper-evident record sealed on simulated ledger'}
               </p>
             </div>
           </div>
@@ -253,6 +263,16 @@ export default function CertificatePage() {
                   {copiedTx ? <Check size={12} color="var(--color-success)" /> : <Copy size={12} />}
                 </button>
               </div>
+              {isOnChainRecord(record) && (
+                <a
+                  href={explorerTxUrl(record.txHash, record.network)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="chain-link"
+                >
+                  View on block explorer ↗
+                </a>
+              )}
             </div>
           </div>
 

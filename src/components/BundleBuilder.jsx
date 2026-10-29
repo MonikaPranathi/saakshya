@@ -5,6 +5,7 @@ import { db } from '../firebase'
 import { useAuth } from '../AuthContext'
 import { hashFiles, masterFingerprint, formatSize } from '../bundle'
 import { analyzeFile } from '../metadata'
+import { sealFingerprint } from '../chain'
 import { MiniChecks } from './BundleList'
 import { ArrowLeft, UploadCloud, Lock, FileText, X, AlertCircle } from 'lucide-react'
 
@@ -93,13 +94,14 @@ export default function BundleBuilder({ onBack }) {
     setSaving(true)
     setError('')
     try {
+      const seal = await sealFingerprint(master)
       const docRef = await addDoc(collection(db, 'evidence'), {
         fileName: `Case bundle (${items.length} files)`,
         sha256: master,
         ownerUid: user.uid,
         sealedAt: serverTimestamp(),
-        txHash: '0x' + randomHex64(),
-        network: 'Simulated testnet',
+        txHash: seal.txHash,
+        network: seal.network,
         captureMethod: 'upload',
         bundle: items.map((i) => ({
           name: i.name,
@@ -111,7 +113,7 @@ export default function BundleBuilder({ onBack }) {
         bundleCount: items.length,
         fileChecks: bundleSummary(items),
       })
-      navigate(`/certificate/${docRef.id}`)
+      navigate(`/certificate/${docRef.id}`, { state: { sealNote: seal.note } })
     } catch (err) {
       setError(err.message || 'Failed to seal the bundle.')
     } finally {
